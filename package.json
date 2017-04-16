@@ -1,0 +1,20 @@
+{
+  "author": "Fábio de Assis",
+  "license": "MIT",
+  "version": "0.0.1",
+  "description": "Desenvolvendo uma Aplicação RESTful API",
+  "name": "f2p-bokmarks-api",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "jwt-simple": "^0.5.1",
+    "moment": "^2.18.1",
+    "mongoose": "^4.9.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabiodeassis/F2pBookmarksApi"
+  }
+}
