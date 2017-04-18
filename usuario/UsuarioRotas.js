@@ -30,6 +30,24 @@ var getAllUsers = function(req, res) {
 };
 
 /**
+ * Retorna um usuário
+ * @param req
+ * @param res
+ */
+function getUserById(req, res) {
+
+  model.findById(req.params.usuario_id, function(error, usuario) {
+    if(error)
+      return res.status(500).json(error);
+
+    if (!usuario)
+      return res.status(404).json({message:'Usuário não encontrado'});
+
+    res.json(usuario);
+  });
+}
+
+/**
  * Atualiza os Dados de Um usuário
  * @param req
  * @param res
@@ -92,5 +110,6 @@ module.exports = {
   login: login,
   new: newUser,
   remove: delUser,
-  update: updateUser
+  update: updateUser,
+  user: getUserById
 };

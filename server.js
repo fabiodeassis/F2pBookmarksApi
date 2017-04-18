@@ -57,16 +57,7 @@ router.route('/usuarios')
 router.route('/usuarios/:usuario_id')
 
 /* 3) Método: Selecionar Por Id (acessar em: GET http://localhost:8080/api/usuarios/:usuario_id) */
-  .get(function(req, res) {
-
-    //Função para Selecionar Por Id e verificar se há algum erro:
-    Usuario.findById(req.params.usuario_id, function(error, usuario) {
-      if(error)
-        res.send(error);
-
-      res.json(usuario);
-    });
-  })
+  .get(isLogged, Users.user)
 
   /* 4) Método: Atualizar (acessar em: PUT http://localhost:8080/api/usuarios/:usuario_id) */
   .put(isLogged, Users.update)

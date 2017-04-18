@@ -32,22 +32,21 @@ module.exports = function(req, res) {
       return res.status(404).json({message:'Nenhum usuário encontrado'})
     }
 
-    //2
-    console.log(36, user);
-    user.verificaSenha(password, user.password, function(isMatch) {
+    /** Verifica se o Password é igual ao do DB */
+    user.verificaSenha(password, function(isMatch) {
 
       if (!isMatch) {
-        return res.status(401).json("Senha inválida para o usuário" + user.username);
+        return res.status(401).json("Senha inválida para o usuário " + user.username);
       }
 
-      //3
-      var expires = moment().add(7,'days').valueOf();
+      /** Cria um novo token */
+      var expires = moment().add(1,'days').valueOf();
       var token = jwt.encode({
         iss: user.id,
         exp: expires
       }, segredo);
 
-      //4
+      /** Retorna os dados */
       return res.json({
         token : token,
         expires: expires,
