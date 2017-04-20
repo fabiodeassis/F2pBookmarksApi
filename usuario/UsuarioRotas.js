@@ -14,7 +14,8 @@
 var
   model = require('./UsuarioModel'),
   newUser = require('./UsuarioNew'),
-  login = require('./UsuarioLogin');
+  login = require('./UsuarioLogin'),
+  validators = require('./../utils/validators');
 
 /**
  * Retorna todos os Usuarios da Base
@@ -54,28 +55,34 @@ function getUserById(req, res) {
  */
 var updateUser = function(req, res) {
 
-  //Primeiro: Para atualizarmos, precisamos primeiro achar o Usuario. Para isso, vamos selecionar por id:
-  model.findById(req.params.usuario_id, function(error, usuario) {
+  if (validators.isAdmin(req, res) || validators.isOwner(req,res)) {
 
-    if (error) return res.status(400).json(error);
+    //Primeiro: Para atualizarmos, precisamos primeiro achar o Usuario. Para isso, vamos selecionar por id:
+    model.findById(req.params.usuario_id, function (error, usuario) {
 
-    if (!usuario) return res.status(404).json({message: 'usuario não encontrado'});
+      if (error) return res.status(400).json(error);
 
-    //Segundo: Diferente do Selecionar Por Id... a resposta será a atribuição do que encontramos na classe modelo:
-    usuario.username = req.body.username;
-    usuario.password = req.body.password;
-    usuario.email = req.body.email;
-    usuario.updated = Date.now();
+      if (!usuario) return res.status(404).json({message: 'usuario não encontrado'});
 
-    //Terceiro: Agora que já atualizamos os campos, precisamos salvar essa alteração....
-    // Utilizando 'save' para manter o funcionameto dos Hooks pre e post
-    usuario.save(function(error) {
-      if(error)
-        return res.status(400).send(error);
+      //Segundo: Diferente do Selecionar Por Id... a resposta será a atribuição do que encontramos na classe modelo:
+      usuario.username = req.body.username;
+      usuario.password = req.body.password;
+      usuario.email = req.body.email;
+      usuario.updated = Date.now();
 
-      res.json({ message: 'Usuário ' + usuario.username + ' foi Atualizado!', data: usuario  });
+      //Terceiro: Agora que já atualizamos os campos, precisamos salvar essa alteração....
+      // Utilizando 'save' para manter o funcionameto dos Hooks pre e post
+      usuario.save(function (error) {
+        if (error)
+          return res.status(400).send(error);
+
+        res.json({message: 'Usuário ' + usuario.username + ' foi Atualizado!', data: usuario});
+      });
     });
-  });
+  }
+  else {
+    return res.status(401).json({message: 'Acesso nagado!'});
+  }
 
 };
 

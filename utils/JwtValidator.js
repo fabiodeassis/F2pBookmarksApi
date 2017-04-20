@@ -8,7 +8,8 @@
 var
 	model 	= require('./../usuario/UsuarioModel'),
 	jwt 		= require('jwt-simple'),
-	segredo = 'seusegredodetoken';
+  config = require('./../utils/Config'),
+	segredo = config._SECRET_;
 
 module.exports = function(req, res, next) {
 

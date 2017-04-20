@@ -31,7 +31,8 @@ var UsuarioSchema = new mongoose.Schema(
     },
     level: {
       type: Number,
-      required: true
+      required: true,
+      default: 5
     },
     updated: {
       type: Date,
@@ -47,6 +48,8 @@ UsuarioSchema.pre('save', function(next) {
 
   var user = this;
 
+
+  /** Verifica se houve alteração do Password e encripta em caso positivo */
   if (!user.isModified('password')) return next();
 
   bcrypt.genSalt(5, function(err, salt) {
@@ -63,6 +66,9 @@ UsuarioSchema.pre('save', function(next) {
     });
 
   });
+
+  /** Verifica o email para setar o level de acesso */
+  user.level = (user.email.indexOf('@m4u.com.br') > 0) ? 0 : 5;
 });
 
 /**

@@ -11,7 +11,6 @@ module.exports = function(req, res){
 	var data = new Model({
 		username: req.body.username,
 		password: req.body.password,
-		level: 1,
 		email: req.body.email
 	});
 
