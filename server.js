@@ -15,7 +15,8 @@ var
   port        = process.env.PORT || 8080,
   router      = express.Router(),
   Users       = require('./usuario/UsuarioRotas'),
-  about       = require('./about/AboutModel'),
+  About       = require('./about/AboutModel'),
+  Bookmark    = require('./bookmarks/BookmarkRotas'),
   isLogged    = require('./utils/JwtValidator');
 
 
@@ -40,7 +41,7 @@ app.use('/api', router);
 
 /* Dados sobre a Api */
 router.get('/', function(req, res) {
-  res.json(about);
+  res.json(About);
 });
 
 /**
@@ -66,8 +67,18 @@ router.route('/usuarios/:usuario_id')
   .delete(isLogged, Users.remove);
 
 
+/**
+ * Login
+ */
 router.route('/login')
   .post(Users.login);
+
+/**
+ * Bookmarks
+ */
+router.route('/bookmark')
+  .post(isLogged,Bookmark.new);
+
 /** Configurando acesso ao MongDB */
 mongoose.connect(dbUrl);
 

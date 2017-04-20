@@ -7,7 +7,7 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-var validators = require('./../utils/validators');
+var validators = require('./../utils/Utils');
 
 /**
  * Modelo de Usuário

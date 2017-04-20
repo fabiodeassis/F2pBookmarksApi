@@ -6,7 +6,6 @@
  */
 
 var
-  model   = require('./../usuario/UsuarioModel'),
   jwt     = require('jwt-simple'),
   config  = require('./Config');
   segredo = config._SECRET_;
@@ -64,6 +63,31 @@ module.exports = {
         var decoded = jwt.decode(token, segredo);
         console.log('É Dono:',(decoded.iss === req.params.usuario_id));
         return (decoded.iss === req.params.usuario_id);
+      }
+      catch (err) {
+        return res.status(401).json({message: 'Erro: Seu token é inválido', erro: err});
+      }
+
+    }
+    else {
+      return res.status(401).json({message: 'Token não encontrado ou não informado'});
+    }
+  },
+
+  /**
+   * Retorna o User_id do Usuario logado
+   * @param req
+   * @param res
+   * @returns {*}
+   */
+  getActualUserId: function(req,res){
+
+    var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
+
+    if (token) {
+      try {
+        var decoded = jwt.decode(token, segredo);
+        return decoded.iss;
       }
       catch (err) {
         return res.status(401).json({message: 'Erro: Seu token é inválido', erro: err});

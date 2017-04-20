@@ -17,7 +17,7 @@ module.exports = function(req, res) {
   var password = req.body.password || '';
 
   if (username == '' || password == '') {
-    return res.status(401).json({
+    return res.status(400).json({
       username: (username == '') ? 'Informe o nome de Usuário' : null,
       password: (password == '') ? 'Informe a senha' : null
     });
@@ -37,7 +37,7 @@ module.exports = function(req, res) {
     user.verificaSenha(password, function(isMatch) {
 
       if (!isMatch) {
-        return res.status(401).json("Senha inválida para o usuário " + user.username);
+        return res.status(401).json({message:"Senha inválida para o usuário " + user.username });
       }
 
       /** Cria um novo token */

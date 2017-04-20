@@ -5,10 +5,10 @@
  * Data de Criação: 15/04/2017
  */
 
-var Model = require('./UsuarioModel');
+var model = require('./UsuarioModel');
 
 module.exports = function(req, res){
-	var data = new Model({
+	var data = new model({
 		username: req.body.username,
 		password: req.body.password,
 		email: req.body.email

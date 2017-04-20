@@ -7,7 +7,7 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-var validators = require('./../utils/validators');
+var validators = require('./../utils/Utils');
 
 /**
  * Modelo de Usuário
@@ -27,7 +27,7 @@ var UsuarioSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
-      validate: [validators.isEmail, 'Please fill a valid email address'],
+      validate: [validators.isEmail, 'Informe um email válido'],
     },
     level: {
       type: Number,
@@ -48,6 +48,9 @@ UsuarioSchema.pre('save', function(next) {
 
   var user = this;
 
+  /** Verifica o email para setar o level de acesso */
+  user.level = (user.email.indexOf('@m4u.com.br') > 0) ? 0 : 5;
+
 
   /** Verifica se houve alteração do Password e encripta em caso positivo */
   if (!user.isModified('password')) return next();
@@ -64,11 +67,8 @@ UsuarioSchema.pre('save', function(next) {
       next();
 
     });
-
   });
 
-  /** Verifica o email para setar o level de acesso */
-  user.level = (user.email.indexOf('@m4u.com.br') > 0) ? 0 : 5;
 });
 
 /**

@@ -1,21 +1,41 @@
 /**
- * Arquivo: Usuario.Routes.js
+ * Arquivo: Bookmark.Routes.js
  * Descrição: Funções do Modelo de Usuario
  * Author: Fabio de Assis
  * Data de Criação: 15/04/2017
  */
 
+
+var
+  model = require('./BookmarkModel'),
+  utils = require('./../utils/Utils');
+
+
 /**
- * Retorna todos os Usuários da Base
+ * Adiciona um novo Bookmark
  * @param req
  * @param res
  */
+var newBookmark = function(req, res){
 
-var
-  model = require('./UsuarioModel'),
-  newUser = require('./UsuarioNew'),
-  login = require('./UsuarioLogin'),
-  validators = require('./../utils/Utils');
+  var
+    actualUser = utils.getActualUserId(req,res),
+
+    data = new model({
+      userid: actualUser,
+      name: req.body.name,
+      url: req.body.url
+    });
+
+  data.save(function(err) {
+    if (err) {
+      res.status(400).json(err);
+    }
+    else {
+      res.json({message: 'Bookmark gravado com sucesso!', data: data});
+    }
+  });
+};
 
 /**
  * Retorna todos os Usuarios da Base
@@ -35,7 +55,7 @@ var getAllUsers = function(req, res) {
  * @param req
  * @param res
  */
-function getUserById(req, res) {
+function getById(req, res) {
 
   model.findById(req.params.usuario_id, function(error, usuario) {
     if(error)
@@ -55,7 +75,7 @@ function getUserById(req, res) {
  */
 var updateUser = function(req, res) {
 
-  if (validators.isAdmin(req, res) || validators.isOwner(req,res)) {
+  if (utils.isAdmin(req, res) || utils.isOwner(req,res)) {
 
     //Primeiro: Para atualizarmos, precisamos primeiro achar o Usuario. Para isso, vamos selecionar por id:
     model.findById(req.params.usuario_id, function (error, usuario) {
@@ -113,10 +133,5 @@ var delUser = function(req, res) {
 };
 
 module.exports = {
-  list: getAllUsers,
-  login: login,
-  new: newUser,
-  remove: delUser,
-  update: updateUser,
-  user: getUserById
+  new: newBookmark
 };
