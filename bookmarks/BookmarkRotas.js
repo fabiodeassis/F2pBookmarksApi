@@ -5,7 +5,6 @@
  * Data de Criação: 15/04/2017
  */
 
-
 var
   model = require('./BookmarkModel'),
   utils = require('./../utils/Utils');
@@ -38,16 +37,85 @@ var newBookmark = function(req, res){
 };
 
 /**
- * Retorna todos os Usuarios da Base
+ * Retorna todos os Bookmarks do Usuario atual
  * @param req
  * @param res
  */
-var getAllUsers = function(req, res) {
-  model.find(function(err, usuarios) {
-    if (err) res.send(err);
+var getFromUser = function(req, res) {
 
-    res.json(usuarios);
+  var actualUser = utils.getActualUserId(req,res);
+
+  model.find({userid:actualUser},function(err, bookmarks) {
+    if (err) return res.status(500).json(error);
+
+    res.json(bookmarks);
   });
+};
+
+var getBookmark = function(req, res){
+
+};
+
+/**
+ * Atualiza um Bookmark
+ * @param req
+ * @param res
+ */
+var updateBookmark = function(req, res){
+
+  model.findById(req.params.bookmarkid, function (error, bookmark) {
+
+    if (error) return res.status(500).json(error);
+
+    if (!bookmark) return res.status(404).json({message: 'Bookmark não encontrado'});
+
+    if (utils.isOwner(req,res,bookmark.userid)) {
+      bookmark.name = req.body.name;
+      bookmark.url = req.body.url;
+      bookmark.updated = Date.now();
+
+      bookmark.save(function (error) {
+
+        if (error) return res.status(500).send(error);
+
+        res.json({message: 'o Bookmark ' + bookmark.name + ' foi Atualizado!', data: bookmark});
+
+      });
+    }
+    else {
+      return res.status(401).json({message: 'Acesso negado! Você não pode editar este Bookmark'});
+    }
+  });
+
+};
+
+/**
+ * Remove um Bookmark
+ * @param req
+ * @param res
+ */
+var removeBookmark = function(req,res){
+
+  var conditions = {
+    _id: req.params.bookmarkid,
+    userid: utils.getActualUserId(req,res)
+  };
+
+  var callback = function (error, doc, result) {
+
+    if (error) res.status(400).json(error);
+
+    var result = {
+      message: (doc) ? 'Bookmark excluído com Sucesso!' : 'Bookmark não existe ou você não pode removê-lo',
+      data: doc,
+      result: result
+    };
+
+    res.json(result);
+  };
+
+  model.findOneAndRemove(conditions, callback);
+
 };
 
 /**
@@ -68,43 +136,8 @@ function getById(req, res) {
   });
 }
 
-/**
- * Atualiza os Dados de Um usuário
- * @param req
- * @param res
- */
-var updateUser = function(req, res) {
 
-  if (utils.isAdmin(req, res) || utils.isOwner(req,res)) {
 
-    //Primeiro: Para atualizarmos, precisamos primeiro achar o Usuario. Para isso, vamos selecionar por id:
-    model.findById(req.params.usuario_id, function (error, usuario) {
-
-      if (error) return res.status(400).json(error);
-
-      if (!usuario) return res.status(404).json({message: 'usuario não encontrado'});
-
-      //Segundo: Diferente do Selecionar Por Id... a resposta será a atribuição do que encontramos na classe modelo:
-      usuario.username = req.body.username;
-      usuario.password = req.body.password;
-      usuario.email = req.body.email;
-      usuario.updated = Date.now();
-
-      //Terceiro: Agora que já atualizamos os campos, precisamos salvar essa alteração....
-      // Utilizando 'save' para manter o funcionameto dos Hooks pre e post
-      usuario.save(function (error) {
-        if (error)
-          return res.status(400).send(error);
-
-        res.json({message: 'Usuário ' + usuario.username + ' foi Atualizado!', data: usuario});
-      });
-    });
-  }
-  else {
-    return res.status(401).json({message: 'Acesso nagado!'});
-  }
-
-};
 
 /**
  * Remove um registro da base
@@ -133,5 +166,9 @@ var delUser = function(req, res) {
 };
 
 module.exports = {
-  new: newBookmark
+  new: newBookmark,
+  getFromUser: getFromUser,
+  get: getBookmark,
+  update: updateBookmark,
+  remove: removeBookmark
 };

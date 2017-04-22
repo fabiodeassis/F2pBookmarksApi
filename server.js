@@ -77,7 +77,16 @@ router.route('/login')
  * Bookmarks
  */
 router.route('/bookmark')
+  .get(isLogged,Bookmark.getFromUser)
   .post(isLogged,Bookmark.new);
+
+/**
+ * Gerenciar Bookmarks existentes
+ */
+router.route('/bookmark/:bookmarkid')
+  .get(isLogged,Bookmark.get)
+  .put(isLogged,Bookmark.update)
+  .delete(isLogged,Bookmark.remove);
 
 /** Configurando acesso ao MongDB */
 mongoose.connect(dbUrl);

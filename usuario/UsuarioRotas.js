@@ -81,7 +81,7 @@ var updateUser = function(req, res) {
     });
   }
   else {
-    return res.status(401).json({message: 'Acesso nagado!'});
+    return res.status(401).json({message: 'Acesso negado!'});
   }
 
 };
@@ -92,24 +92,31 @@ var updateUser = function(req, res) {
  * @param res
  */
 var delUser = function(req, res) {
-  var conditions = {
-    _id: req.params.usuario_id
-  };
 
-  var callback = function(error, doc, result) {
+  if (validators.isAdmin(req, res) || validators.isOwner(req,res)) {
 
-    if (error) res.status(400).json(error);
-
-    var result = {
-      message: (doc) ? 'Usuário excluído com Sucesso!' : 'Usuário não encontrado',
-      data: doc,
-      result: result
+    var conditions = {
+      _id: req.params.usuario_id
     };
 
-    res.json(result);
-  };
+    var callback = function (error, doc, result) {
 
-  model.findOneAndRemove(conditions, callback);
+      if (error) res.status(400).json(error);
+
+      var result = {
+        message: (doc) ? 'Usuário excluído com Sucesso!' : 'Usuário não encontrado',
+        data: doc,
+        result: result
+      };
+
+      res.json(result);
+    };
+
+    model.findOneAndRemove(conditions, callback);
+  }
+  else {
+    return res.status(401).json({message: 'Acesso negado!'});
+  }
 };
 
 module.exports = {

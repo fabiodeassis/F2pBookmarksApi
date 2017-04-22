@@ -53,7 +53,7 @@ module.exports = {
    * @param req
    * @returns {*}
    */
-  isOwner: function(req,res){
+  isOwner: function(req,res,userid){
 
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
 
@@ -61,8 +61,8 @@ module.exports = {
       try {
 
         var decoded = jwt.decode(token, segredo);
-        console.log('É Dono:',(decoded.iss === req.params.usuario_id));
-        return (decoded.iss === req.params.usuario_id);
+        console.log('É Dono:',(decoded.iss === (req.params.usuario_id || userid)));
+        return (decoded.iss === (req.params.usuario_id || userid));
       }
       catch (err) {
         return res.status(401).json({message: 'Erro: Seu token é inválido', erro: err});

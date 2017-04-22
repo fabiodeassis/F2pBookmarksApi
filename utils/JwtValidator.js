@@ -22,7 +22,7 @@ module.exports = function(req, res, next) {
 			console.log('decodando ' + decoded);
 
 			if (decoded.exp <= Date.now()) {
-				res.status(400).json({error: 'Acesso Expirado, faça login novamente'});
+				return res.status(400).json({error: 'Acesso Expirado, faça login novamente'});
 			}
 
 			model.findOne({ _id: decoded.iss }, function(err, user) {
@@ -31,9 +31,9 @@ module.exports = function(req, res, next) {
 					return res.status(500).json({message: "erro ao procurar usuario do token.", details: err});
 				}
 
-				// if (!user) {
-				// 	return res.status(404).json({message: "Usuário não encontrado", details: err});
-				// }
+				if (!user) {
+					return res.status(404).json({message: "Usuário não encontrado"});
+				}
 
 				req.user = user;
 				console.log('achei usuario ' + req.user);

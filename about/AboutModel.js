@@ -5,9 +5,12 @@
  * Data de Criação: 15/04/2017
  */
 
-// TODO Pensar numa forma mais inteligente de fazer isso
 /**
  * Informações sobre a API
+ *
+ * TODO
+ * - Retornar os dados do package.json
+ * - Mesclar com Postman
  */
 
 module.exports = {
