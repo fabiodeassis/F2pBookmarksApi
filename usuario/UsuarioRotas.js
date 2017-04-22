@@ -5,17 +5,92 @@
  * Data de Criação: 15/04/2017
  */
 
+var
+  model = require('./UsuarioModel'),
+  jwt = require('jwt-simple'),
+  validators = require('./../utils/Utils'),
+  moment = require('moment'),
+  config = require('./../utils/Config'),
+  segredo = config._SECRET_;
+
 /**
- * Retorna todos os Usuários da Base
+ * Cadastra um novo usuário
  * @param req
  * @param res
  */
+var newUser = function(req, res){
+  var data = new model({
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email
+  });
 
-var
-  model = require('./UsuarioModel'),
-  newUser = require('./UsuarioNew'),
-  login = require('./UsuarioLogin'),
-  validators = require('./../utils/Utils');
+  data.save(function(err) {
+    if (err) {
+      res.status(500).json(err);
+    }
+    else {
+      res.json({
+        message: 'Novo Usuário',
+        data: {
+          username: data.username,
+          email: data.email
+        }
+      });
+    }
+  });
+};
+
+/**
+ * Efetua o Login de uM usuário
+ * @param req
+ * @param res
+ * @returns {*}
+ */
+var login = function (req, res) {
+
+  var username = req.body.username || '';
+  var password = req.body.password || '';
+
+  if (username == '' || password == '') {
+    return res.status(400).json({ message: 'Informe o nome de Usuário ou Senha'});
+  }
+
+  model.findOne({username: username}, function (err, user) {
+
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    if (!user) {
+      return res.status(404).json({message:'Nenhum usuário encontrado'})
+    }
+
+    /** Verifica se o Password é igual ao do DB */
+    user.verificaSenha(password, function(isMatch) {
+
+      if (!isMatch) {
+        return res.status(401).json({message:"Senha inválida para o usuário " + user.username });
+      }
+
+      /** Cria um novo token */
+      var expires = moment().add(1,'days').valueOf();
+      var token = jwt.encode({
+        iss: user.id,
+        ils: user.level,
+        exp: expires
+      }, segredo);
+
+      /** Retorna os dados */
+      return res.json({
+        token : token,
+        expires: expires,
+        user: user.toJSON()
+      });
+
+    });
+  });
+};
 
 /**
  * Retorna todos os Usuarios da Base
@@ -60,7 +135,7 @@ var updateUser = function(req, res) {
     //Primeiro: Para atualizarmos, precisamos primeiro achar o Usuario. Para isso, vamos selecionar por id:
     model.findById(req.params.usuario_id, function (error, usuario) {
 
-      if (error) return res.status(400).json(error);
+      if (error) return res.status(500).json(error);
 
       if (!usuario) return res.status(404).json({message: 'usuario não encontrado'});
 
@@ -101,7 +176,7 @@ var delUser = function(req, res) {
 
     var callback = function (error, doc, result) {
 
-      if (error) res.status(400).json(error);
+      if (error) res.status(500).json(error);
 
       var result = {
         message: (doc) ? 'Usuário excluído com Sucesso!' : 'Usuário não encontrado',
