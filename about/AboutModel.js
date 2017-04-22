@@ -9,21 +9,19 @@
  * Informações sobre a API
  *
  * TODO
- * - Retornar os dados do package.json
  * - Mesclar com Postman
  */
 
+var
+  pjson = require('./../package.json'),
+  postman = require('./../postman.json');
+
 module.exports = {
-  name: 'F2P Bookmarks API',
-  description: 'Rest API de gerenciamento de usuários e seus favoritos',
-  version: '0.0.1',
-  author: {
-    name: 'Fábio de Assis',
-    email: 'assisfabio@gmail.com'
-  },
-  repository: {
-    type: "git",
-    url: "https://github.com/fabiodeassis/F2pBookmarksApi"
-  },
-  license: "MIT"
+  name: pjson.name,
+  description: pjson.description,
+  version: pjson.version,
+  author: pjson.author,
+  repository: pjson.repository,
+  license: pjson.license,
+  collection: postman
 };

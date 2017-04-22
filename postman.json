@@ -1,0 +1,251 @@
+{
+	"variables": [],
+	"info": {
+		"name": "F2P BookMarks API",
+		"_postman_id": "b1331bbc-86f5-5406-0e09-877e43f1744c",
+		"description": "Api para acesso e gerenciamento de bookmarks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API - About",
+			"request": {
+				"url": "{{host}}/api",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Retorna informações sobre a API"
+			},
+			"response": []
+		},
+		{
+			"name": "Usuário - Delete User by ID",
+			"request": {
+				"url": "{{host}}/api/usuarios/$userid$",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": "Remove o usuário especificado pelo ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Usuário - Get All Users",
+			"request": {
+				"url": "{{host}}/api/usuarios",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Usuário - Get User by ID",
+			"request": {
+				"url": "{{host}}/api/usuarios/$userid$",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Retorna um usuário especificado pelo ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Usuários - Update User",
+			"request": {
+				"url": "{{host}}/api/usuarios/$userid$",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"$username$\",\n\t\"email\": \"$useremail$\",\n\t\"password\":\"$password$\"\n}"
+				},
+				"description": "Atualiza os dados de um usuário"
+			},
+			"response": []
+		},
+		{
+			"name": "Usuário - Login",
+			"request": {
+				"url": "{{host}}/api/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"username\":\"$username$\",\n\"password\":\"$password$\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Usuários - Set New User",
+			"request": {
+				"url": "{{host}}/api/usuarios",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"username\":\"$username$\",\n\"password\":\"$password$\",\n\"email\":\"$email$\"\n}"
+				},
+				"description": "Resgitra um novo usuário"
+			},
+			"response": []
+		},
+		{
+			"name": "Bookmark - Delete Bookmark by ID",
+			"request": {
+				"url": "{{host}}/api/bookmark/$userid$",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": "Remove o Bookmark especificado pelo ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Bookmarks - Get Bookmark List",
+			"request": {
+				"url": "{{host}}/api/bookmark",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": "Retorna a lista de Bookmarks do usuário logado"
+			},
+			"response": []
+		},
+		{
+			"name": "Bookmarks - Set New Bookmark",
+			"request": {
+				"url": "{{host}}/api/bookmark",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"$bookmarkname$\",\n\"url\":\"$bokmarkurl$\"\n}"
+				},
+				"description": "Registra um novo bookmark"
+			},
+			"response": []
+		},
+		{
+			"name": "Bookmarks - Update Bookmark",
+			"request": {
+				"url": "{{host}}/api/bookmark/$bookmarkid$",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "$encryptedtoken$",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"$bookmarkname$\",\n\t\"url\":  \"$bookmarkurl$\"\n}"
+				},
+				"description": "Atualiza os dados de um Bookmark"
+			},
+			"response": []
+		}
+	]
+}
