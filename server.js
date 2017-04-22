@@ -8,21 +8,23 @@
 var
   express     = require('express'),
   app         = express(),
+  router      = express.Router(),
   bodyParser  = require('body-parser'),
   mongoose    = require('mongoose'),
   jwt         = require('jwt-simple'),
-  dbUrl       = 'mongodb://f2pbookmarks:123qwe@ds011705.mlab.com:11705/f2pbookmarks',
-  port        = process.env.PORT || 8080,
-  router      = express.Router(),
+
   Users       = require('./usuario/UsuarioRotas'),
   About       = require('./about/AboutModel'),
   Bookmark    = require('./bookmarks/BookmarkRotas'),
-  isLogged    = require('./utils/JwtValidator');
+
+  isLogged    = require('./utils/JwtValidator'),
+  config      = require('./utils/Config');
 
 
 /** Definindo um Middleware para interceptar todas as chamadas para a api */
 router.use(function(req, res, next) {
   // TODO Interceptar e logar dados das chamadas para analise posterior
+  // Utilizar no futuro para verificar chaves de acesso
   // console.log("Request: ", req);
   // console.log("Response: ", res);
   next(); // Seguindo para a próxima rota
@@ -54,16 +56,9 @@ router.route('/usuarios')
 /**
  * Gerenciar Usuários específicos
  */
-// Rotas que irão terminar em '/usuarios/:usuario_id' - (servem tanto para GET by Id, PUT, & DELETE)
 router.route('/usuarios/:usuario_id')
-
-/* 3) Método: Selecionar Por Id (acessar em: GET http://localhost:8080/api/usuarios/:usuario_id) */
   .get(isLogged, Users.user)
-
-  /* 4) Método: Atualizar (acessar em: PUT http://localhost:8080/api/usuarios/:usuario_id) */
   .put(isLogged, Users.update)
-
-  /* 5) Método: Excluir (acessar em: http://localhost:8080/api/usuarios/:usuario_id) */
   .delete(isLogged, Users.remove);
 
 
@@ -88,13 +83,15 @@ router.route('/bookmark/:bookmarkid')
   .put(isLogged,Bookmark.update)
   .delete(isLogged,Bookmark.remove);
 
-/** Configurando acesso ao MongDB */
-mongoose.connect(dbUrl);
+/** Configurando acesso ao MongoDB */
+mongoose.connect(config._MONGODB_);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.info('Banco de Dados conectado');
 });
-app.listen(port);
-console.log('conectado a porta ' + port);
+
+app.listen(config._PORT_);
+
+console.info('Conectado pela porta ' + config._PORT_);

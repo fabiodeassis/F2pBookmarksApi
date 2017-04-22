@@ -35,7 +35,7 @@ module.exports = {
       try {
 
         var decoded = jwt.decode(token, segredo);
-        console.log('É Admin:',(decoded.ils === 0));
+
         return (decoded.ils === 0);
       }
       catch (err) {
@@ -61,7 +61,7 @@ module.exports = {
       try {
 
         var decoded = jwt.decode(token, segredo);
-        console.log('É Dono:',(decoded.iss === (req.params.usuario_id || userid)));
+
         return (decoded.iss === (req.params.usuario_id || userid));
       }
       catch (err) {

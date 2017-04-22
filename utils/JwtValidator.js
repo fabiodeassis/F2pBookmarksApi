@@ -19,7 +19,6 @@ module.exports = function(req, res, next) {
 		try {
 
 			var decoded = jwt.decode(token, segredo);
-			console.log('decodando ' + decoded);
 
 			if (decoded.exp <= Date.now()) {
 				return res.status(400).json({error: 'Acesso Expirado, faça login novamente'});
@@ -36,7 +35,7 @@ module.exports = function(req, res, next) {
 				}
 
 				req.user = user;
-				console.log('achei usuario ' + req.user);
+
 				return next();
 			});
 

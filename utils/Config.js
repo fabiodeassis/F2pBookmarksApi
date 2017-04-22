@@ -6,5 +6,7 @@
  */
 
 module.exports = {
-  _SECRET_: 'seusegredodetoken'
+  _MONGODB_: 'mongodb://f2pbookmarks:123qwe@ds011705.mlab.com:11705/f2pbookmarks',
+  _PORT_: process.env.PORT || 8080,
+  _SECRET_: 'seusegredodetoken',
 };

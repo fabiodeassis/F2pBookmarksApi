@@ -2,8 +2,8 @@
   "author": "Fábio de Assis",
   "license": "MIT",
   "version": "0.0.1",
-  "description": "Desenvolvendo uma Aplicação RESTful API",
-  "name": "f2p-bokmarks-api",
+  "description": "Desenvolvendo uma API RESTful",
+  "name": "f2p-bookmarks-api",
   "main": "server.js",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
