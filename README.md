@@ -1,9 +1,9 @@
-#Bookmarks API
+# Bookmarks API
 
-###Baixe as dependências:
+### Baixe as dependências:
 `> npm install`
 
-###Rode o server com Node.js
+### Rode o server com Node.js
 `> npm start`
 
 Utilize o Postman para verificar as chamadas para: `http://localhost:8080/api`
