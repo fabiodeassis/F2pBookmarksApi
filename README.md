@@ -1,5 +1,5 @@
 # Bookmarks API
-https://api.travis-ci.org/fabiodeassis/use-dribbble.svg?branch=master
+
 ### Baixe as dependências:
 `> npm install`
 
